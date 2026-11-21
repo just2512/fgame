@@ -29,8 +29,8 @@
 ## CI 实际结果
 
 - Workflow：Prototype CI
-- Run：[#13 / 44911803423](https://github.com/just2512/fgame/actions/runs/44911803423)
-- 验收提交：`2780434d5e12de099f75efa7f1b8bdb47f22c4d1`
+- Run：[#15 / 44912011652](https://github.com/just2512/fgame/actions/runs/44912011652)
+- 验收提交：`43c252109fec46ea1f6607b6f9b69f8dcd6a55bc`
 - 结果：`success`
 - 严格 TypeScript 检查：PASS
 - Vitest：15/15 PASS
@@ -39,6 +39,7 @@
 - 双向压力反转（过度拖延、过度收缩）：PASS
 - 5,000 局随机策略模拟：PASS
 - Vite 生产构建：PASS
+- CI 生成并上传网页构建包与源码快照：PASS
 
 ### 5,000 局随机策略模拟结果
 
