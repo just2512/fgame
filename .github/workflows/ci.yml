@@ -1,6 +1,8 @@
 name: Prototype CI
 
 on:
+  push:
+    branches: ["work/save-protection-v0.1"]
   pull_request:
     branches: ["main"]
 
@@ -17,20 +19,33 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-      - name: Type check and tests
+      - name: Type check and unit tests
         run: |
+          mkdir -p artifacts
           npm run typecheck
-          npm run test
+          npm run test -- --reporter=json --outputFile=artifacts/vitest-results.json
       - name: Production build
         run: npm run build
-      - name: Package source snapshot
-        run: git archive --format=zip --output=fgame-source.zip HEAD
-      - name: Upload runnable web build and source
+      - name: Install Chromium for browser acceptance
+        run: npx playwright install --with-deps chromium
+      - name: Real browser save and offline acceptance
+        run: npm run test:e2e
+      - name: Upload browser test diagnostics
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fgame-v0.1-preview-and-source
+          name: fgame-playwright-diagnostics-${{ github.run_id }}
           path: |
-            dist/
-            fgame-source.zip
+            test-results/
+            artifacts/playwright-results.json
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Package source, web preview and build metadata
+        run: npm run pack
+      - name: Upload reproducible deliverables
+        uses: actions/upload-artifact@v4
+        with:
+          name: fgame-v0.1-${{ github.sha }}
+          path: artifacts/
           if-no-files-found: error
           retention-days: 14
