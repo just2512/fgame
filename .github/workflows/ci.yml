@@ -23,3 +23,14 @@ jobs:
           npm run test
       - name: Production build
         run: npm run build
+      - name: Package source snapshot
+        run: git archive --format=zip --output=fgame-source.zip HEAD
+      - name: Upload runnable web build and source
+        uses: actions/upload-artifact@v4
+        with:
+          name: fgame-v0.1-preview-and-source
+          path: |
+            dist/
+            fgame-source.zip
+          if-no-files-found: error
+          retention-days: 14
