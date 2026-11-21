@@ -10,17 +10,27 @@
 
 | 验收项 | 证据 / 命令 | 当前状态 |
 |---|---|---|
-| 事件 ID 与调度引用校验 | validateStory + story JSON | CI 待运行 |
-| 条件 AST（all/any/not） | npm run test | CI 待运行 |
-| 同 seed + 同选择序列复现 | replayChoices 测试 | CI 待运行 |
-| 不同能力导致不同结果 | take_over 情境测试 | CI 待运行 |
-| 延迟事件先于下一主线 | audit_findings 测试 | CI 待运行 |
-| 不满足条件的选项隐藏 | choice requires 测试 | CI 待运行 |
-| 条件随机事件 | random event 测试 | CI 待运行 |
-| 结局与兜底 | ending 独立路径测试 | CI 待运行 |
-| 类型检查 | npm run typecheck | CI 待运行 |
-| 生产构建 | npm run build | CI 待运行 |
-| 生产界面不暴露卦爻术语 | 文案测试 | CI 待运行 |
+| 事件 ID 与调度引用校验 | validateStory + story JSON | PASS |
+| 条件 AST（all/any/not） | npm run test | PASS |
+| 同 seed + 同选择序列复现 | replayChoices 测试 | PASS |
+| 不同能力导致不同结果 | take_over 情境测试 | PASS |
+| 延迟事件先于下一主线 | audit_findings 测试 | PASS |
+| 不满足条件的选项隐藏 | choice requires 测试 | PASS |
+| 条件随机事件 | random event 测试 | PASS |
+| 结局与兜底 | ending 独立路径测试 | PASS |
+| 类型检查 | npm run typecheck | PASS |
+| 生产构建 | npm run build | PASS |
+| 生产界面不暴露卦爻术语 | 文案测试 | PASS |
+
+## CI 实际结果
+
+- Workflow：Prototype CI
+- Run：[#5 / 44910414147](https://github.com/just2512/fgame/actions/runs/44910414147)
+- 验收提交：`3a1a7ffc6a60274767d7923941cbf5000b98d0a5`
+- 结果：`success`
+- 严格 TypeScript 检查：PASS
+- Vitest：11/11 PASS
+- Vite 生产构建：PASS
 
 ## 设备验收（尚未执行）
 
