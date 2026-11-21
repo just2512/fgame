@@ -1273,7 +1273,7 @@
                 {
                   "type": "pressure.delta",
                   "name": "austerity",
-                  "delta": 5
+                  "delta": 6
                 },
                 {
                   "type": "trajectory.add",

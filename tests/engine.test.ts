@@ -4,6 +4,9 @@ import { chooseOption, getAvailableChoices, getCurrentEvent, startGame } from ".
 import { replayChoices } from "../src/engine/replay";
 import { evaluateCondition } from "../src/engine/conditions";
 import { validateStory } from "../src/engine/validation";
+import { hashSeed, nextRandom } from "../src/engine/rng";
+import { loadSave, removeSave, saveGame } from "../src/engine/storage";
+import "fake-indexeddb/auto";
 import type { StoryDefinition } from "../src/engine/types";
 
 const story = storyJson as StoryDefinition;
@@ -19,9 +22,12 @@ describe("story definition", () => {
       event.title,
       event.scene,
       event.reflection ?? "",
-      ...(event.choices ?? []).map((choice) => choice.text)
+      ...(event.choices ?? []).flatMap((choice) => [
+        choice.text,
+        ...choice.resolve.map((rule) => rule.narrative)
+      ])
     ].join(" ")).join(" ");
-    expect(visibleText).not.toMatch(/卦|爻|吉凶|起卦|变卦/);
+    expect(visibleText).not.toMatch(/卦|爻|阴阳|吉凶|起卦|变卦|物极必反|盛极而衰|否极泰来|天命|命中注定|报应/);
   });
 });
 
@@ -50,12 +56,21 @@ describe("deterministic narrative engine", () => {
     const noviceResult = chooseOption(novice, story, "take_over");
     expect(noviceResult.flags.rash_takeover).toBe(true);
     expect(noviceResult.forces.company_health?.value).toBe(37);
+    expect(noviceResult.forces.control?.value).toBe(22);
+    expect(noviceResult.npcs.uncle?.rivalry).toBe(24);
+    expect(noviceResult.npcs.chen?.trust).toBe(52);
+    expect(noviceResult.pending.map(item => item.eventId)).toContain("uncle_reassessment");
 
     const experienced = startGame(story, "takeover-test");
     experienced.player.skills.management = 4;
     const experiencedResult = chooseOption(experienced, story, "take_over");
     expect(experiencedResult.flags.rash_takeover).toBe(false);
     expect(experiencedResult.forces.company_health?.value).toBe(49);
+    expect(experiencedResult.forces.control?.value).toBe(32);
+    expect(experiencedResult.npcs.uncle?.rivalry).toBe(20);
+    expect(experiencedResult.npcs.chen?.trust).toBe(64);
+    expect(experiencedResult.pending.map(item => item.eventId)).toContain("uncle_reassessment");
+    expect(experiencedResult).not.toEqual(noviceResult);
   });
 
   it("fires a scheduled consequence before the next main scene", () => {
@@ -166,6 +181,103 @@ describe("deterministic narrative engine", () => {
       {eventId:"ajie_call",choiceId:"decline_for_now"},
       {eventId:"reversal_austerity",choiceId:"try_small_pilot"}
     ])).toBe("ending_open");
+  });
+
+
+  it("makes excessive retreat trigger a one-shot opportunity-cost reversal", () => {
+    let state = startGame(noRandomStory, "austerity-test");
+    state = chooseOption(state, noRandomStory, "enjoy_new_life");
+    state = chooseOption(state, noRandomStory, "attend_board");
+    state = chooseOption(state, noRandomStory, "wait_one_week");
+    expect(state.currentEventId).toBe("reversal_complacency");
+    state = chooseOption(state, noRandomStory, "face_accumulated_issues");
+    expect(state.currentEventId).toBe("ajie_call");
+
+    state = chooseOption(state, noRandomStory, "decline_for_now");
+    expect(state.triggeredPressures).toContain("austerity");
+    expect(state.currentEventId).toBe("reversal_austerity");
+
+    const retained = chooseOption(state, noRandomStory, "keep_everything_in_reserve");
+    expect(retained.currentEventId).toBe("ending_independent");
+    expect(retained.forces.market_cycle?.value).toBeLessThan(state.forces.market_cycle?.value ?? 100);
+    expect(retained.triggeredPressures.filter(name => name === "austerity")).toHaveLength(1);
+  });
+
+  it("replays an IndexedDB save/load interruption identically through the remaining story", async () => {
+    await removeSave();
+    const checkpoint = chooseOption(startGame(story, "indexeddb-replay-seed"), story, "enjoy_new_life");
+    expect(checkpoint.currentEventId).toBe("board_pressure");
+    expect(checkpoint.offerRandom).toBe(true);
+
+    await saveGame(checkpoint);
+    const restored = await loadSave();
+    expect(restored).toEqual(checkpoint);
+    if (!restored) throw new Error("Expected a saved game to be restored");
+
+    let uninterrupted = chooseOption(checkpoint, story, "attend_board");
+    let resumed = chooseOption(restored, story, "attend_board");
+    expect(resumed).toEqual(uninterrupted);
+
+    for (let step = 0; step < 32 && !uninterrupted.ended; step += 1) {
+      const event = getCurrentEvent(uninterrupted, story);
+      if (event.kind === "ending") break;
+      const available = getAvailableChoices(event, uninterrupted);
+      expect(available.length).toBeGreaterThan(0);
+      const choiceId = available[0]?.id;
+      if (!choiceId) throw new Error("Expected a choice in a non-ending event");
+      uninterrupted = chooseOption(uninterrupted, story, choiceId);
+      resumed = chooseOption(resumed, story, choiceId);
+      expect(resumed).toEqual(uninterrupted);
+    }
+
+    expect(uninterrupted.ended).toBe(true);
+    expect(resumed.history.map(item => item.narrative)).toEqual(uninterrupted.history.map(item => item.narrative));
+    await saveGame(resumed);
+    expect(await loadSave()).toEqual(uninterrupted);
+    await removeSave();
+  });
+
+  it("simulates 5,000 seeded random-policy playthroughs and flags skewed ending distribution", () => {
+    const randomOnlyStory: StoryDefinition = { ...story, randomChance: 0 };
+    const endingIds = story.events.filter(event => event.kind === "ending").map(event => event.id);
+    const counts: Record<string, number> = Object.fromEntries(endingIds.map(id => [id, 0]));
+    const runCount = 5000;
+
+    for (let run = 0; run < runCount; run += 1) {
+      let state = startGame(randomOnlyStory, "random-policy-" + run);
+      let policyState = hashSeed("policy-" + run);
+      let steps = 0;
+
+      while (!state.ended && steps < 32) {
+        const event = getCurrentEvent(state, randomOnlyStory);
+        if (event.kind === "ending") break;
+        const choices = getAvailableChoices(event, state);
+        expect(choices.length).toBeGreaterThan(0);
+        const draw = nextRandom(policyState);
+        policyState = draw.state;
+        const selected = choices[Math.min(choices.length - 1, Math.floor(draw.value * choices.length))];
+        if (!selected) throw new Error("Random policy could not select a choice");
+        state = chooseOption(state, randomOnlyStory, selected.id);
+        steps += 1;
+      }
+
+      expect(state.ended).toBe(true);
+      const endingId = getCurrentEvent(state, randomOnlyStory).id;
+      expect(counts[endingId]).toBeDefined();
+      counts[endingId] = (counts[endingId] ?? 0) + 1;
+    }
+
+    const distribution = Object.fromEntries(endingIds.map(id => [id, {
+      count: counts[id],
+      share: Number(((counts[id] ?? 0) / runCount).toFixed(4))
+    }]));
+    console.log("5,000 seeded random-policy ending distribution:", JSON.stringify(distribution));
+
+    for (const endingId of endingIds) {
+      const share = (counts[endingId] ?? 0) / runCount;
+      expect(share, endingId + " should not be practically unreachable in the random-policy sample").toBeGreaterThanOrEqual(0.01);
+      expect(share, endingId + " should not dominate the random-policy sample").toBeLessThanOrEqual(0.6);
+    }
   });
 
   it("evaluates nested all/any/not conditions without eval", () => {
