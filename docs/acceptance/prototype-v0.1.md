@@ -25,11 +25,12 @@
 ## CI 实际结果
 
 - Workflow：Prototype CI
-- Run：[#5 / 44910414147](https://github.com/just2512/fgame/actions/runs/44910414147)
-- 验收提交：`3a1a7ffc6a60274767d7923941cbf5000b98d0a5`
+- Run：[#5 / 44910414147](https://github.com/just2512/fgame/actions/runs/44910690912)
+- 验收提交：`413e21eb7a085b15aef19b4f63204f45f55a55ad`
 - 结果：`success`
 - 严格 TypeScript 检查：PASS
-- Vitest：11/11 PASS
+- Vitest：12/12 PASS
+- 五个样板阶段性结局均有自动化可达路径：PASS
 - Vite 生产构建：PASS
 
 ## 设备验收（尚未执行）
