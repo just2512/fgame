@@ -30,6 +30,18 @@ export function validateStory(story: StoryDefinition): string[] {
   if (!eventIds.has(story.fallbackEndingId)) errors.push("Fallback ending does not exist: " + story.fallbackEndingId);
   if (story.randomChance < 0 || story.randomChance > 1) errors.push("randomChance must be between 0 and 1");
 
+  for (const rule of story.pressureRules) {
+    if (!Object.prototype.hasOwnProperty.call(story.initial.pressures, rule.name)) {
+      errors.push("Unknown pressure accumulator: " + rule.name);
+    }
+    if (!Number.isFinite(rule.threshold) || rule.threshold <= 0) {
+      errors.push("Pressure threshold must be > 0: " + rule.name);
+    }
+    const target = story.events.find((event) => event.id === rule.eventId);
+    if (!target) errors.push("Pressure event does not exist: " + rule.eventId);
+    else if (target.kind !== "delayed") errors.push("Pressure event must be delayed: " + rule.eventId);
+  }
+
   for (const event of story.events) {
     if (event.kind === "ending") {
       if (event.choices && event.choices.length > 0) errors.push("Ending must not have choices: " + event.id);
@@ -46,7 +58,7 @@ export function validateStory(story: StoryDefinition): string[] {
         continue;
       }
       const lastRule = choice.resolve[choice.resolve.length - 1];
-      if (lastRule.when) errors.push("Last resolution rule must be an unconditional fallback: " + event.id + "/" + choice.id);
+      if (lastRule?.when) errors.push("Last resolution rule must be an unconditional fallback: " + event.id + "/" + choice.id);
       for (const rule of choice.resolve) {
         for (const effect of rule.effects) {
           errors.push(...validateEffect(effect, eventIds, forceIds, npcIds).map((message) => event.id + "/" + choice.id + ": " + message));

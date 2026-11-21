@@ -22,6 +22,13 @@ export type Effect =
   | { type: "disposition.delta"; trait: string; delta: number }
   | { type: "schedule"; eventId: string; afterTurns: number; reason: string };
 
+export interface PressureRule {
+  name: string;
+  threshold: number;
+  eventId: string;
+  reason: string;
+}
+
 export interface ForceState {
   value: number;
   trend: Trend;
@@ -74,6 +81,7 @@ export interface StoryDefinition {
   fallbackEndingId: string;
   randomPerMainEvent: boolean;
   randomChance: number;
+  pressureRules: PressureRule[];
   initial: {
     player: {
       identity: string;
@@ -134,6 +142,7 @@ export interface GameState {
   flags: Record<string, Scalar>;
   pressures: Record<string, number>;
   trajectory: string[];
+  triggeredPressures: string[];
   pending: PendingConsequence[];
   completedEvents: string[];
   history: ChoiceRecord[];

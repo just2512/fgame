@@ -14,6 +14,7 @@
 | fallbackEndingId | string | 是 | 无其他结局命中时的兜底结局 |
 | randomPerMainEvent | boolean | 是 | 主线事件后是否开放一次随机事件抽取 |
 | randomChance | number | 是 | 0–1 的抽取门槛，只影响随机事件是否出现 |
+| pressureRules | array | 是 | 累积器到达阈值后排程的反转事件 |
 | initial | object | 是 | 玩家、势线、NPC、flags、压力与时间的初始状态 |
 | events | Event[] | 是 | 人工编写的事件库 |
 
@@ -49,35 +50,6 @@
 | key | 内容作者标记关键节点，供编辑检查使用 |
 
 ## 3. Choice 与 ResolutionRule
-
-    {
-      "id": "hire_auditors",
-      "text": "聘请专业团队，进行全面审计",
-      "requires": {
-        "path": "player.skills.insight",
-        "op": "gte",
-        "value": 2
-      },
-      "resolve": [
-        {
-          "id": "audit_with_experience",
-          "when": {
-            "path": "player.skills.insight",
-            "op": "gte",
-            "value": 3
-          },
-          "outcome": "information_first",
-          "narrative": "你要求独立团队核对账目。",
-          "effects": []
-        },
-        {
-          "id": "audit_default",
-          "outcome": "information_first",
-          "narrative": "你要求独立团队核对账目。",
-          "effects": []
-        }
-      ]
-    }
 
 - requires：不满足时选项不显示；不能显示后再用“失败率”处理。
 - resolve：按文件顺序匹配第一条满足 when 的规则。
@@ -129,10 +101,9 @@
 - all：全部子条件满足。
 - any：至少一个子条件满足。
 - not：对子条件取反。
-- 空 all / any 不建议写入内容文件；内容校验应在后续版本补齐此限制。
 - path 必须指向 GameState 中真实存在的字段。未知路径视为内容错误并抛出异常，不静默放行。
 
-## 5. Effect
+## 5. Effect 与反转阈值
 
 | type | 字段 | 作用 |
 |---|---|---|
@@ -147,14 +118,16 @@
 | disposition.delta | trait, delta | 累积隐性行为倾向 |
 | schedule | eventId, afterTurns, reason | 排程延迟事件；afterTurns 必须 >= 1 |
 
-调度示例：
+pressureRules 为累积器提供阈值映射：
 
     {
-      "type": "schedule",
-      "eventId": "audit_findings",
-      "afterTurns": 1,
-      "reason": "独立审计启动，初步线索将在下一阶段出现。"
+      "name": "complacency",
+      "threshold": 20,
+      "eventId": "reversal_complacency",
+      "reason": "连续推迟处理现实问题，积累的风险开始显现。"
     }
+
+每条规则的事件必须存在且 kind 为 delayed。单局内同一累积器的阈值事件只触发一次，避免在反转事件中循环排程。
 
 延迟事件到期时仍需重新检查 Event.when；条件已不成立时丢弃该待办，不播放过时剧情。
 
@@ -162,11 +135,12 @@
 
 每次选择结算后，顺序如下：
 
-1. 到期的 delayed 事件，按 dueAtTurn 从早到晚处理。
-2. 若本次结算来自 main 事件，按 randomChance 和权重抽取一个符合条件、尚未发生的 random 事件。
-3. 选择 order 最小、尚未完成且满足 when 的 main 事件。
-4. 若没有可继续的 main 事件，按 priority 从高到低匹配 ending。
-5. 没有任何专用 ending 命中时使用 fallbackEndingId。
+1. 记录新越过的压力阈值，排程对应反转事件。
+2. 到期的 delayed 事件，按 dueAtTurn 从早到晚处理。
+3. 若本次结算来自 main 事件，按 randomChance 和权重抽取一个符合条件、尚未发生的 random 事件。
+4. 选择 order 最小、尚未完成且满足 when 的 main 事件。
+5. 若没有可继续的 main 事件，按 priority 从高到低匹配 ending。
+6. 没有任何专用 ending 命中时使用 fallbackEndingId。
 
 随机事件每个主线决策最多插入一个；延迟事件可以在同一阶段连续处理。random/delayed 事件本身不增加主线 turn。
 
@@ -186,6 +160,6 @@
 - fallbackEndingId 必须指向 ending 事件。
 - 非 ending 事件必须至少有一个选项。
 - 每个选项必须有 resolution，且最后一条为 fallback。
-- schedule 必须指向已定义事件，afterTurns 为正整数。
+- schedule 和 pressureRules 必须指向已定义事件，afterTurns 为正整数。
 - force / NPC 引用必须存在。
 - 每个事件应由作者完成六问检查并通过人工审阅。

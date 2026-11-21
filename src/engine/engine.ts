@@ -26,6 +26,23 @@ export function getAvailableChoices(event: StoryEvent, state: GameState): Choice
   return (event.choices ?? []).filter((choice) => choiceIsAvailable(choice, state));
 }
 
+function schedulePressureReversals(state: GameState, story: StoryDefinition, sourceEventId: string): void {
+  for (const rule of story.pressureRules) {
+    const current = state.pressures[rule.name] ?? 0;
+    if (current < rule.threshold || state.triggeredPressures.includes(rule.name)) continue;
+
+    state.triggeredPressures.push(rule.name);
+    if (!state.pending.some((item) => item.eventId === rule.eventId)) {
+      state.pending.push({
+        eventId: rule.eventId,
+        dueAtTurn: state.turn + 1,
+        scheduledFrom: sourceEventId,
+        reason: rule.reason
+      });
+    }
+  }
+}
+
 export function chooseOption(state: GameState, story: StoryDefinition, choiceId: string): GameState {
   if (state.ended) throw new Error("The story has already ended");
   const nextState = cloneState(state);
@@ -39,6 +56,7 @@ export function chooseOption(state: GameState, story: StoryDefinition, choiceId:
 
   const resolution = findResolution(choice, nextState);
   applyResolution(nextState, resolution, event.id);
+  schedulePressureReversals(nextState, story, event.id);
   nextState.completedEvents.push(event.id);
   nextState.history.push({
     turn: nextState.turn,

@@ -87,6 +87,21 @@ describe("deterministic narrative engine", () => {
     expect(["media_sighting", "old_classmate_party"]).toContain(event.id);
   });
 
+  it("turns an accumulated pressure threshold into one delayed reversal event", () => {
+    let state = startGame(noRandomStory, "pressure-test");
+    state = chooseOption(state, noRandomStory, "enjoy_new_life");
+    state = chooseOption(state, noRandomStory, "delegate_for_now");
+    expect(state.currentEventId).toBe("cashflow_report");
+    expect(state.triggeredPressures).toContain("complacency");
+
+    state = chooseOption(state, noRandomStory, "wait_one_week");
+    expect(state.currentEventId).toBe("reversal_complacency");
+
+    state = chooseOption(state, noRandomStory, "keep_distance_from_business");
+    expect(state.triggeredPressures.filter((name) => name === "complacency")).toHaveLength(1);
+    expect(state.pending.some((item) => item.eventId === "reversal_complacency")).toBe(false);
+  });
+
   it("matches an ending and always has a fallback", () => {
     let state = startGame(noRandomStory, "ending-test");
     state = chooseOption(state, noRandomStory, "enjoy_new_life");

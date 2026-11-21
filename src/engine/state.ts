@@ -16,6 +16,7 @@ export function createInitialState(story: StoryDefinition, seed: string): GameSt
     flags: structuredClone(story.initial.flags),
     pressures: structuredClone(story.initial.pressures),
     trajectory: [],
+    triggeredPressures: [],
     pending: [],
     completedEvents: [],
     history: [],
