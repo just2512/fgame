@@ -486,6 +486,11 @@
                 {
                   "type": "trajectory.add",
                   "tag": "明确合作边界"
+                },
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": 4
                 }
               ]
             }

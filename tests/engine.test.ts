@@ -116,6 +116,54 @@ describe("deterministic narrative engine", () => {
     expect(ending.id).toBe("ending_independent");
   });
 
+  it("has an authored reachable route to every stage ending", () => {
+    const runPath = (steps: Array<{ eventId: string; choiceId: string }>) => {
+      let state = startGame(noRandomStory, "ending-reachability");
+      for (const step of steps) {
+        expect(state.currentEventId).toBe(step.eventId);
+        state = chooseOption(state, noRandomStory, step.choiceId);
+      }
+      return getCurrentEvent(state, noRandomStory).id;
+    };
+
+    expect(runPath([
+      {eventId:"inheritance_meeting",choiceId:"take_over"},
+      {eventId:"uncle_reassessment",choiceId:"set_clear_boundaries"},
+      {eventId:"cashflow_report",choiceId:"open_board_meeting"},
+      {eventId:"ajie_call",choiceId:"review_project"}
+    ])).toBe("ending_controlled");
+
+    expect(runPath([
+      {eventId:"inheritance_meeting",choiceId:"hire_auditors"},
+      {eventId:"audit_findings",choiceId:"preserve_evidence"},
+      {eventId:"cashflow_report",choiceId:"private_cashflow_review"},
+      {eventId:"ajie_call",choiceId:"help_with_connections"}
+    ])).toBe("ending_friendship");
+
+    expect(runPath([
+      {eventId:"inheritance_meeting",choiceId:"enjoy_new_life"},
+      {eventId:"board_pressure",choiceId:"attend_board"},
+      {eventId:"cashflow_report",choiceId:"wait_one_week"},
+      {eventId:"reversal_complacency",choiceId:"face_accumulated_issues"},
+      {eventId:"ajie_call",choiceId:"decline_for_now"}
+    ])).toBe("ending_independent");
+
+    expect(runPath([
+      {eventId:"inheritance_meeting",choiceId:"enjoy_new_life"},
+      {eventId:"board_pressure",choiceId:"delegate_for_now"},
+      {eventId:"cashflow_report",choiceId:"open_board_meeting"},
+      {eventId:"reversal_complacency",choiceId:"face_accumulated_issues"},
+      {eventId:"ajie_call",choiceId:"decline_for_now"}
+    ])).toBe("ending_held_back");
+
+    expect(runPath([
+      {eventId:"inheritance_meeting",choiceId:"hire_auditors"},
+      {eventId:"audit_findings",choiceId:"preserve_evidence"},
+      {eventId:"cashflow_report",choiceId:"wait_one_week"},
+      {eventId:"ajie_call",choiceId:"decline_for_now"}
+    ])).toBe("ending_open");
+  });
+
   it("evaluates nested all/any/not conditions without eval", () => {
     const state = startGame(story, "conditions-test");
     expect(evaluateCondition({
