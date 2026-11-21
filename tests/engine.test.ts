@@ -59,7 +59,8 @@ describe("deterministic narrative engine", () => {
     expect(noviceResult.forces.control?.value).toBe(22);
     expect(noviceResult.npcs.uncle?.rivalry).toBe(24);
     expect(noviceResult.npcs.chen?.trust).toBe(52);
-    expect(noviceResult.pending.map(item => item.eventId)).toContain("uncle_reassessment");
+    expect(noviceResult.currentEventId).toBe("uncle_reassessment");
+    expect(noviceResult.pending).toHaveLength(0);
 
     const experienced = startGame(story, "takeover-test");
     experienced.player.skills.management = 4;
@@ -69,7 +70,8 @@ describe("deterministic narrative engine", () => {
     expect(experiencedResult.forces.control?.value).toBe(32);
     expect(experiencedResult.npcs.uncle?.rivalry).toBe(20);
     expect(experiencedResult.npcs.chen?.trust).toBe(64);
-    expect(experiencedResult.pending.map(item => item.eventId)).toContain("uncle_reassessment");
+    expect(experiencedResult.currentEventId).toBe("uncle_reassessment");
+    expect(experiencedResult.pending).toHaveLength(0);
     expect(experiencedResult).not.toEqual(noviceResult);
   });
 
