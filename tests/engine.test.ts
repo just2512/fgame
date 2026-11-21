@@ -107,6 +107,9 @@ describe("deterministic narrative engine", () => {
     state = chooseOption(state, noRandomStory, "enjoy_new_life");
     state = chooseOption(state, noRandomStory, "attend_board");
     state = chooseOption(state, noRandomStory, "wait_one_week");
+    expect(state.currentEventId).toBe("reversal_complacency");
+    state = chooseOption(state, noRandomStory, "face_accumulated_issues");
+    expect(state.currentEventId).toBe("ajie_call");
     state = chooseOption(state, noRandomStory, "decline_for_now");
     const ending = getCurrentEvent(state, noRandomStory);
     expect(ending.kind).toBe("ending");
