@@ -1,0 +1,1665 @@
+{
+  "id": "sudden-billionaire",
+  "version": "0.1.0",
+  "title": "突然成为百亿富二代",
+  "chapterTitle": "继承之初",
+  "startEventId": "inheritance_meeting",
+  "fallbackEndingId": "ending_open",
+  "randomPerMainEvent": true,
+  "randomChance": 0.82,
+  "initial": {
+    "player": {
+      "identity": "新继承人",
+      "standing": {
+        "role": "新继承人",
+        "company_control": "极低",
+        "asset_position": "巨额资产所有者"
+      },
+      "skills": {
+        "management": 1,
+        "insight": 2,
+        "negotiation": 2,
+        "self_control": 2,
+        "courage": 2
+      },
+      "disposition": {
+        "ambition": 0,
+        "caution": 0,
+        "loyalty": 0,
+        "pragmatism": 0,
+        "independence": 0
+      }
+    },
+    "forces": {
+      "company_health": {
+        "value": 45,
+        "trend": "falling",
+        "phase": "strained"
+      },
+      "market_cycle": {
+        "value": 38,
+        "trend": "falling",
+        "phase": "decline"
+      },
+      "control": {
+        "value": 10,
+        "trend": "stable",
+        "phase": "fragmented"
+      },
+      "family_tension": {
+        "value": 60,
+        "trend": "rising",
+        "phase": "uneasy"
+      },
+      "public_attention": {
+        "value": 30,
+        "trend": "stable",
+        "phase": "curious"
+      },
+      "personal_liquidity": {
+        "value": 80,
+        "trend": "stable",
+        "phase": "abundant"
+      }
+    },
+    "npcs": {
+      "uncle": {
+        "trust": 45,
+        "debt": 0,
+        "rivalry": 12,
+        "reliability": 58
+      },
+      "chen": {
+        "trust": 52,
+        "debt": 0,
+        "rivalry": 4,
+        "reliability": 78
+      },
+      "ajie": {
+        "trust": 72,
+        "debt": 0,
+        "rivalry": 0,
+        "reliability": 54
+      },
+      "zhao": {
+        "trust": 35,
+        "debt": 0,
+        "rivalry": 8,
+        "reliability": 66
+      }
+    },
+    "flags": {
+      "takeover_attempted": false,
+      "rash_takeover": false,
+      "trusted_uncle": false,
+      "audit_started": false,
+      "postponed_business": false,
+      "personal_life_first": false,
+      "audit_report_seen": false,
+      "cashflow_mapped": false,
+      "board_opened": false,
+      "ajie_supported": false,
+      "ajie_project_involved": false,
+      "ajie_project_checked": false,
+      "uncle_reassessed": false,
+      "new_contact": false,
+      "life_path_chosen": false
+    },
+    "pressures": {
+      "isolation": 0,
+      "complacency": 0,
+      "debt_of_favor": 0,
+      "exposure": 0,
+      "austerity": 0
+    },
+    "time": {
+      "chapter": 1,
+      "month": 1
+    }
+  },
+  "events": [
+    {
+      "id": "inheritance_meeting",
+      "kind": "main",
+      "chapter": 1,
+      "order": 1,
+      "title": "遗嘱宣读后的第三天",
+      "scene": "叔叔在书房等你。他没有表现出敌意，甚至亲手给你倒了茶。\n\n“你现在是家里最大的股东之一。但公司不是银行账户，不能想怎么动就怎么动。给我一点时间，我把业务慢慢交给你。”\n\n财务总监陈总坐在旁边，没有插话。他的公文包里放着一份尚未提交董事会的现金流报告。",
+      "choices": [
+        {
+          "id": "take_over",
+          "text": "亲自接管企业，组建自己的管理团队",
+          "resolve": [
+            {
+              "id": "experienced_takeover",
+              "when": {
+                "path": "player.skills.management",
+                "op": "gte",
+                "value": 3
+              },
+              "outcome": "strong_start",
+              "narrative": "你提出先明确经营权限，再逐步调整团队。陈总愿意配合，几位部门负责人也开始认真看待这位新继承人。叔叔没有当场反对，但他显然在重新衡量局面。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 22
+                },
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": 4
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "chen",
+                  "metric": "trust",
+                  "delta": 12
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "rivalry",
+                  "delta": 8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "takeover_attempted",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "主动接手经营"
+                },
+                {
+                  "type": "schedule",
+                  "eventId": "uncle_reassessment",
+                  "afterTurns": 1,
+                  "reason": "你提出接管企业，叔叔需要重新评估你的态度。"
+                }
+              ]
+            },
+            {
+              "id": "inexperienced_takeover",
+              "outcome": "overreach",
+              "narrative": "你很快提出接管经营，却发现自己连几个核心业务的来龙去脉都说不清。会议没有失控，但没人急着把真正的权限交给你。叔叔答应配合，语气却比刚才客气了许多。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 12
+                },
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": -8
+                },
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": 8
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "rivalry",
+                  "delta": 12
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "isolation",
+                  "delta": 8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "takeover_attempted",
+                  "value": true
+                },
+                {
+                  "type": "flag.set",
+                  "name": "rash_takeover",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "仓促接管"
+                },
+                {
+                  "type": "schedule",
+                  "eventId": "uncle_reassessment",
+                  "afterTurns": 1,
+                  "reason": "你仓促提出接管，叔叔开始观察你的实际能力。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trust_uncle",
+          "text": "暂时信任叔叔，先熟悉企业经营",
+          "resolve": [
+            {
+              "id": "uncle_is_reliable",
+              "when": {
+                "path": "npcs.uncle.reliability",
+                "op": "gte",
+                "value": 65
+              },
+              "outcome": "stable_handover",
+              "narrative": "叔叔没有急着让你签署任何文件，而是安排陈总带你熟悉账目和业务。你暂时没有得到更多控制权，却获得了一段了解公司的时间。",
+              "effects": [
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "trust",
+                  "delta": 12
+                },
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": -8
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                },
+                {
+                  "type": "flag.set",
+                  "name": "trusted_uncle",
+                  "value": true
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": 5
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "借助家族经验"
+                },
+                {
+                  "type": "schedule",
+                  "eventId": "uncle_reassessment",
+                  "afterTurns": 1,
+                  "reason": "你暂时把经营交给叔叔，后续需要确认交接边界。"
+                }
+              ]
+            },
+            {
+              "id": "uncle_keeps_control",
+              "outcome": "deferred_control",
+              "narrative": "叔叔欣然接受你的安排，表示会替你稳住公司。接下来几天，他确实帮你挡下了不少麻烦，但董事会文件仍由他的团队准备，你能接触到的信息并没有明显增加。",
+              "effects": [
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "trust",
+                  "delta": 8
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "debt",
+                  "delta": 8
+                },
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": -3
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": 12
+                },
+                {
+                  "type": "flag.set",
+                  "name": "trusted_uncle",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "暂缓争取控制权"
+                },
+                {
+                  "type": "schedule",
+                  "eventId": "uncle_reassessment",
+                  "afterTurns": 1,
+                  "reason": "你暂时依赖叔叔处理事务，未来需要确认信息与权限是否透明。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hire_auditors",
+          "text": "聘请专业团队，进行全面审计",
+          "resolve": [
+            {
+              "id": "start_independent_audit",
+              "outcome": "information_first",
+              "narrative": "你没有在会议上质疑任何人，只提出聘请独立团队核对财务和项目。陈总第一次主动看向你。叔叔点头同意，但提醒你审计会影响部分业务节奏。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 4
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "chen",
+                  "metric": "trust",
+                  "delta": 16
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "rivalry",
+                  "delta": 10
+                },
+                {
+                  "type": "flag.set",
+                  "name": "audit_started",
+                  "value": true
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "先查清事实"
+                },
+                {
+                  "type": "schedule",
+                  "eventId": "audit_findings",
+                  "afterTurns": 1,
+                  "reason": "独立审计启动，初步线索将在下一阶段出现。"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "enjoy_new_life",
+          "text": "先不急着管企业，给自己一段时间适应新生活",
+          "resolve": [
+            {
+              "id": "take_personal_time",
+              "outcome": "personal_detour",
+              "narrative": "你决定先离开会议室。新身份带来的兴奋、陌生和压力都需要时间消化。几天里，你见了老朋友，也第一次认真想：如果不必马上接管家业，自己究竟想过什么样的生活？",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "public_attention",
+                  "delta": 18
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "complacency",
+                  "delta": 12
+                },
+                {
+                  "type": "flag.set",
+                  "name": "postponed_business",
+                  "value": true
+                },
+                {
+                  "type": "flag.set",
+                  "name": "personal_life_first",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "先寻找自己的生活"
+                },
+                {
+                  "type": "schedule",
+                  "eventId": "board_pressure",
+                  "afterTurns": 1,
+                  "reason": "你暂时离开经营事务，董事会开始关心你的态度。"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "uncle_reassessment",
+      "kind": "delayed",
+      "chapter": 1,
+      "title": "叔叔重新评估你",
+      "when": {
+        "any": [
+          {
+            "path": "flags.takeover_attempted",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "flags.trusted_uncle",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "scene": "第二天，叔叔把你叫到办公室。他没有直接谈股份，而是问你打算怎样参与公司的日常决策。你意识到，他真正关心的不是一句表态，而是以后谁来决定重要的事。",
+      "choices": [
+        {
+          "id": "set_clear_boundaries",
+          "text": "明确分工和信息权限，先把规则谈清楚",
+          "resolve": [
+            {
+              "id": "boundary_with_uncle",
+              "outcome": "clearer_relationship",
+              "narrative": "你们没有完全达成一致，但至少把财务报告、重大投资和人事任免的权限摆到了桌面上。关系仍然微妙，合作却有了可以执行的边界。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 6
+                },
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": 4
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "trust",
+                  "delta": 4
+                },
+                {
+                  "type": "flag.set",
+                  "name": "uncle_reassessed",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "明确合作边界"
+                },
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "keep_peace",
+          "text": "先维持现状，等熟悉业务后再谈权限",
+          "resolve": [
+            {
+              "id": "peace_before_control",
+              "outcome": "temporary_peace",
+              "narrative": "叔叔接受了你的说法，办公室里的气氛轻松了一些。不过，几项重要会议仍然没有邀请你参加。你获得了时间，也把控制权问题留到了以后。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": -5
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": 6
+                },
+                {
+                  "type": "flag.set",
+                  "name": "uncle_reassessed",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "以时间换空间"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "audit_findings",
+      "kind": "delayed",
+      "chapter": 1,
+      "title": "审计团队带回第一批线索",
+      "when": {
+        "path": "flags.audit_started",
+        "op": "eq",
+        "value": true
+      },
+      "scene": "独立团队完成了第一轮核对。几笔应收款确实存在异常，但还不足以证明有人故意挪用资金。陈总建议先保全资料，不要急着把尚未核实的猜测变成公开指控。",
+      "choices": [
+        {
+          "id": "preserve_evidence",
+          "text": "先保全资料，继续核实，不急着公开结论",
+          "resolve": [
+            {
+              "id": "careful_audit",
+              "outcome": "evidence_preserved",
+              "narrative": "你要求团队把每笔异常都核实到合同和回款记录。陈总愿意继续配合，但也提醒你，调查越深入，越可能触动过去的利益安排。",
+              "effects": [
+                {
+                  "type": "flag.set",
+                  "name": "audit_report_seen",
+                  "value": true
+                },
+                {
+                  "type": "flag.set",
+                  "name": "cashflow_mapped",
+                  "value": true
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "chen",
+                  "metric": "trust",
+                  "delta": 10
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "exposure",
+                  "delta": 4
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "share_with_board",
+          "text": "把初步结果提交董事会，要求共同决定下一步",
+          "resolve": [
+            {
+              "id": "audit_in_open",
+              "outcome": "shared_responsibility",
+              "narrative": "董事会同意继续调查，但几位元老开始追问审计范围。你没有得到所有人的信任，却让处理这件事不再只是你和陈总两个人的责任。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 5
+                },
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": 8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "audit_report_seen",
+                  "value": true
+                },
+                {
+                  "type": "flag.set",
+                  "name": "board_opened",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "公开承担责任"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "board_pressure",
+      "kind": "delayed",
+      "chapter": 1,
+      "title": "董事会开始催促",
+      "when": {
+        "path": "flags.postponed_business",
+        "op": "eq",
+        "value": true
+      },
+      "scene": "你离开公司不到一周，董事会秘书便发来会议通知。几位董事希望知道，新继承人究竟是准备参与经营，还是只打算保留股东身份。",
+      "choices": [
+        {
+          "id": "attend_board",
+          "text": "出席会议，坦诚说明自己还在熟悉公司",
+          "resolve": [
+            {
+              "id": "honest_first_appearance",
+              "outcome": "honest_position",
+              "narrative": "你没有假装自己已经懂得经营，只承诺先把关键情况弄清楚。几位董事并未完全放心，但至少知道你没有打算永远缺席。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 4
+                },
+                {
+                  "type": "force.delta",
+                  "force": "public_attention",
+                  "delta": 4
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "negotiation",
+                  "delta": 1
+                },
+                {
+                  "type": "flag.set",
+                  "name": "life_path_chosen",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "delegate_for_now",
+          "text": "授权现有团队继续处理，自己先把生活安排好",
+          "resolve": [
+            {
+              "id": "delegate_and_step_back",
+              "outcome": "step_back",
+              "narrative": "你再次把经营事务交给现有团队。短期内少了不少打扰，但也有人开始把你的沉默理解为默认放权。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": -3
+                },
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": -4
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "complacency",
+                  "delta": 8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "life_path_chosen",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "media_sighting",
+      "kind": "random",
+      "chapter": 1,
+      "weight": 2,
+      "when": {
+        "path": "forces.public_attention.value",
+        "op": "gte",
+        "value": 45
+      },
+      "title": "一张照片引来的关注",
+      "scene": "你在一家餐厅被拍到，照片很快出现在财经自媒体上。评论里有人猜测你会不会马上接管企业，也有人只关心你戴的那块手表。",
+      "choices": [
+        {
+          "id": "stay_silent",
+          "text": "不回应，让公司按原计划处理",
+          "resolve": [
+            {
+              "id": "quiet_response",
+              "outcome": "quiet_publicity",
+              "narrative": "话题热度没有立刻消失，但因为你没有继续回应，很快被新的新闻分散了注意力。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "public_attention",
+                  "delta": -3
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "exposure",
+                  "delta": 2
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "clarify_identity",
+          "text": "简单回应，说明自己还在了解家族企业",
+          "resolve": [
+            {
+              "id": "measured_statement",
+              "outcome": "measured_publicity",
+              "narrative": "你的回应没有制造更多话题，反而让几位董事注意到你开始公开承担身份带来的责任。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 2
+                },
+                {
+                  "type": "force.delta",
+                  "force": "public_attention",
+                  "delta": 2
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "negotiation",
+                  "delta": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chen_private_note",
+      "kind": "random",
+      "chapter": 1,
+      "weight": 3,
+      "when": {
+        "path": "flags.audit_started",
+        "op": "eq",
+        "value": true
+      },
+      "title": "陈总的一条私信",
+      "scene": "晚上十一点，陈总给你发来一条消息：“有一笔旧项目回款，我建议单独核实。现在把它放进公开报告，可能会让几个人立刻抱团。”他没有在消息里写出任何人的名字。",
+      "choices": [
+        {
+          "id": "ask_for_documents",
+          "text": "请他把合同、回款记录和审批链整理给你",
+          "resolve": [
+            {
+              "id": "follow_document_trail",
+              "outcome": "document_trail",
+              "narrative": "陈总发来了一组资料。线索仍然不完整，但你至少知道下一步应该核对什么，而不是凭猜测判断谁有问题。",
+              "effects": [
+                {
+                  "type": "flag.set",
+                  "name": "cashflow_mapped",
+                  "value": true
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "chen",
+                  "metric": "trust",
+                  "delta": 8
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "wait_for_formal_report",
+          "text": "先等正式审计报告，不让私下消息影响判断",
+          "resolve": [
+            {
+              "id": "wait_formal_review",
+              "outcome": "formal_process",
+              "narrative": "你让陈总把线索纳入正式审计。进度慢了一些，但以后讨论时有一套更完整的记录可以依靠。",
+              "effects": [
+                {
+                  "type": "flag.set",
+                  "name": "audit_report_seen",
+                  "value": true
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "chen",
+                  "metric": "trust",
+                  "delta": 3
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "old_classmate_party",
+      "kind": "random",
+      "chapter": 1,
+      "weight": 1,
+      "when": {
+        "path": "forces.public_attention.value",
+        "op": "gte",
+        "value": 40
+      },
+      "title": "多年没联系的同学",
+      "scene": "一位多年没联系的大学同学突然约你吃饭。他说是老同学叙旧，席间却不断打听你手里的投资机会，还提到有个朋友正在找资金。",
+      "choices": [
+        {
+          "id": "meet_casually",
+          "text": "只当老同学聚会，不谈投资",
+          "resolve": [
+            {
+              "id": "social_without_deal",
+              "outcome": "ordinary_reunion",
+              "narrative": "你们聊起大学时的糗事，气氛倒是轻松了不少。饭后他没有再提项目，你也认识了一个新的行业联系人。",
+              "effects": [
+                {
+                  "type": "flag.set",
+                  "name": "new_contact",
+                  "value": true
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ask_about_project",
+          "text": "听听项目情况，但暂不承诺任何资金",
+          "resolve": [
+            {
+              "id": "request_project_info",
+              "outcome": "project_information",
+              "narrative": "你拿到了项目简介和联系人。信息还远远不够做决定，但你没有因为对方套近乎就当场答应。",
+              "effects": [
+                {
+                  "type": "skill.delta",
+                  "skill": "negotiation",
+                  "delta": 1
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "exposure",
+                  "delta": 3
+                },
+                {
+                  "type": "flag.set",
+                  "name": "new_contact",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cashflow_report",
+      "kind": "main",
+      "chapter": 1,
+      "order": 2,
+      "title": "一份不太好看的报表",
+      "scene": "几天后，公司的现金流问题浮出水面。报告显示，几笔大额应收款已经逾期，部分项目的回款时间还在继续推迟。你需要决定，是把问题摆到台面上，还是先弄清楚每个人掌握的信息。",
+      "choices": [
+        {
+          "id": "private_cashflow_review",
+          "text": "让陈总独立核对现金流，先查清事实",
+          "requires": {
+            "any": [
+              {
+                "path": "flags.audit_started",
+                "op": "eq",
+                "value": true
+              },
+              {
+                "path": "npcs.chen.trust",
+                "op": "gte",
+                "value": 60
+              }
+            ]
+          },
+          "resolve": [
+            {
+              "id": "private_review",
+              "outcome": "cashflow_understood",
+              "narrative": "陈总带你逐笔核对合同和回款记录。问题比想象中复杂，但你开始分清哪些是市场拖欠，哪些是内部管理造成的。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": 4
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "chen",
+                  "metric": "trust",
+                  "delta": 8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "cashflow_mapped",
+                  "value": true
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "从事实入手"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "open_board_meeting",
+          "text": "召开董事会，把现金流问题摆到台面上",
+          "resolve": [
+            {
+              "id": "open_board",
+              "outcome": "shared_responsibility",
+              "narrative": "会议气氛并不轻松。有人担心消息外泄，也有人要求追查旧项目。你没有立即获得所有人的支持，但重要问题终于进入正式议程。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 8
+                },
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": 10
+                },
+                {
+                  "type": "force.delta",
+                  "force": "public_attention",
+                  "delta": 4
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "exposure",
+                  "delta": 8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "board_opened",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "公开面对问题"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "wait_one_week",
+          "text": "先压下消息，观察一周再决定",
+          "resolve": [
+            {
+              "id": "delay_cashflow_action",
+              "outcome": "delayed_response",
+              "narrative": "一周很快过去，几笔回款仍没有到账。你避免了仓促表态，却也让部分合作方开始怀疑公司是否有人负责处理问题。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": -8
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "complacency",
+                  "delta": 12
+                },
+                {
+                  "type": "flag.set",
+                  "name": "cashflow_delayed",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "暂缓处理危机"
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "austerity",
+                  "delta": 6
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "delegate_uncle",
+          "text": "让叔叔提出处理方案，自己先听取意见",
+          "requires": {
+            "path": "npcs.uncle.trust",
+            "op": "gte",
+            "value": 50
+          },
+          "resolve": [
+            {
+              "id": "delegate_to_uncle",
+              "when": {
+                "path": "npcs.uncle.reliability",
+                "op": "gte",
+                "value": 65
+              },
+              "outcome": "reliable_delegation",
+              "narrative": "叔叔拿出了一份应急安排，先处理了最紧急的回款问题。他要求你暂时不要改变现有团队，你也获得了一些喘息空间。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": 3
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "trust",
+                  "delta": 5
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": 8
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "依靠现有团队"
+                }
+              ]
+            },
+            {
+              "id": "uncle_controls_information",
+              "outcome": "information_dependency",
+              "narrative": "叔叔很快给出一套处理方案，但关键数据仍由他的团队掌握。你暂时稳住了局面，却更难判断哪些问题已经解决。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": -3
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "debt",
+                  "delta": 10
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": 12
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "依赖他人提供信息"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ajie_call",
+      "kind": "main",
+      "chapter": 1,
+      "order": 3,
+      "title": "阿杰的电话",
+      "scene": "多年没见的老友阿杰听说你继承了家族资产，约你见面。他正在做一个小项目，想请你投资。\n\n他没有开口就谈几千万，只说：“我知道你现在有钱，但我更想知道，你愿不愿意相信我一次。”",
+      "choices": [
+        {
+          "id": "invest_directly",
+          "text": "直接投资，和朋友一起承担风险",
+          "resolve": [
+            {
+              "id": "invest_with_due_diligence",
+              "when": {
+                "path": "player.skills.insight",
+                "op": "gte",
+                "value": 3
+              },
+              "outcome": "careful_partnership",
+              "narrative": "你提出先把资金用途、阶段目标和退出安排写清楚。阿杰没有觉得被冒犯，反而认真补齐了材料。你们决定先做一笔规模有限的投资。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "personal_liquidity",
+                  "delta": -12
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "ajie",
+                  "metric": "trust",
+                  "delta": 12
+                },
+                {
+                  "type": "flag.set",
+                  "name": "ajie_project_involved",
+                  "value": true
+                },
+                {
+                  "type": "flag.set",
+                  "name": "ajie_project_checked",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "与朋友建立有边界的合作"
+                }
+              ]
+            },
+            {
+              "id": "invest_without_review",
+              "outcome": "emotional_investment",
+              "narrative": "你凭着多年交情答应出资。阿杰很感动，但项目预算和时间表还没有经过认真核对。你们都希望这次合作能成功，只是热情暂时走在了准备前面。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "personal_liquidity",
+                  "delta": -18
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "ajie",
+                  "metric": "trust",
+                  "delta": 10
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": 6
+                },
+                {
+                  "type": "flag.set",
+                  "name": "ajie_project_involved",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "凭交情投入资金"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "review_project",
+          "text": "先看项目和账目，再决定是否合作",
+          "resolve": [
+            {
+              "id": "review_before_commit",
+              "outcome": "measured_interest",
+              "narrative": "你们约好下周再谈。阿杰起初有些失落，但还是把项目资料发给了你。你没有立刻承诺资金，也没有把朋友的请求当成一笔普通交易。",
+              "effects": [
+                {
+                  "type": "skill.delta",
+                  "skill": "insight",
+                  "delta": 1
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "ajie",
+                  "metric": "trust",
+                  "delta": 4
+                },
+                {
+                  "type": "flag.set",
+                  "name": "ajie_project_checked",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "先了解再决定"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "help_with_connections",
+          "text": "不投资，但愿意帮他介绍资源",
+          "resolve": [
+            {
+              "id": "support_without_capital",
+              "outcome": "friendship_support",
+              "narrative": "你坦白说自己还不适合直接投资，但愿意帮他认识几位行业联系人。阿杰沉默了一会儿，最后笑着说：“这样也挺好，至少你没敷衍我。”",
+              "effects": [
+                {
+                  "type": "npc.delta",
+                  "npcId": "ajie",
+                  "metric": "trust",
+                  "delta": 10
+                },
+                {
+                  "type": "flag.set",
+                  "name": "ajie_supported",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "用资源支持朋友"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "decline_for_now",
+          "text": "暂时不回应，先处理自己的事情",
+          "resolve": [
+            {
+              "id": "postpone_friend",
+              "outcome": "friendship_unresolved",
+              "narrative": "你没有马上答应，也没有明确拒绝。阿杰说理解，但之后几天你们都没有再联系。等你想起这件事时，他已经开始和另一位投资人讨论下一步。",
+              "effects": [
+                {
+                  "type": "npc.delta",
+                  "npcId": "ajie",
+                  "metric": "trust",
+                  "delta": -8
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "austerity",
+                  "delta": 6
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "暂时搁置朋友请求"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reversal_complacency",
+      "kind": "delayed",
+      "chapter": 1,
+      "title": "被搁置的问题回到眼前",
+      "when": {
+        "path": "pressures.complacency",
+        "op": "gte",
+        "value": 20
+      },
+      "scene": "你原本以为把事情往后放一放，就能换来更多时间。可新的报表显示，几项被搁置的问题已经彼此牵连。没人能替你判断哪些事情还来得及处理，会议室里第一次安静了下来。",
+      "choices": [
+        {
+          "id": "face_accumulated_issues",
+          "text": "把被搁置的问题列出来，逐项确定负责人和期限",
+          "resolve": [
+            {
+              "id": "restore_attention",
+              "outcome": "problems_reorganized",
+              "narrative": "你没有试图一次解决所有问题，而是把最紧急的几项重新排了顺序。团队终于知道接下来该做什么，代价是你必须重新投入时间和精力。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": 5
+                },
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 3
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "complacency",
+                  "delta": -12
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "self_control",
+                  "delta": 1
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "重新承担被搁置的责任"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "keep_distance_from_business",
+          "text": "继续让现有团队处理，自己不介入具体事务",
+          "resolve": [
+            {
+              "id": "continue_to_step_back",
+              "outcome": "distance_maintained",
+              "narrative": "你保留了自己的时间，但团队仍然缺少明确的决策人。几项问题暂时被分开处理，真正的牵连还没有消失。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "company_health",
+                  "delta": -5
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "complacency",
+                  "delta": 5
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "继续与经营事务保持距离"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reversal_favor_debt",
+      "kind": "delayed",
+      "chapter": 1,
+      "title": "一份需要偿还的人情",
+      "when": {
+        "path": "pressures.debt_of_favor",
+        "op": "gte",
+        "value": 20
+      },
+      "scene": "叔叔在一次晚饭后单独留下你。他没有直接提出要求，只是提醒你，过去几次关键时刻都是他替你稳住局面。随后，他提到一项希望你支持的人事安排。你听得出来，这不是一件简单的家务事。",
+      "choices": [
+        {
+          "id": "accept_favor_request",
+          "text": "接受叔叔的安排，先维持家族内部的合作",
+          "resolve": [
+            {
+              "id": "accept_family_arrangement",
+              "outcome": "favor_repaid",
+              "narrative": "叔叔对你的态度缓和了不少，家族内部暂时没有新的冲突。但你也知道，这次让步会成为以后继续合作时的一项参照。",
+              "effects": [
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "trust",
+                  "delta": 8
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "debt",
+                  "delta": -8
+                },
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": -5
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": -12
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "以让步维持家族合作"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "draw_a_clear_boundary",
+          "text": "感谢他的帮助，但要求把人事决定交回正式程序",
+          "resolve": [
+            {
+              "id": "formalize_family_decision",
+              "outcome": "boundary_restated",
+              "narrative": "叔叔没有当场发火，只是沉默了片刻。你们之间的关系没有因此破裂，但他也明白，过去的帮助不能自动换来未来每一项决定的同意。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "family_tension",
+                  "delta": 7
+                },
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": 3
+                },
+                {
+                  "type": "npc.delta",
+                  "npcId": "uncle",
+                  "metric": "rivalry",
+                  "delta": 6
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "debt_of_favor",
+                  "delta": -12
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "negotiation",
+                  "delta": 1
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "为合作关系明确边界"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reversal_austerity",
+      "kind": "delayed",
+      "chapter": 1,
+      "title": "合作窗口正在关闭",
+      "when": {
+        "path": "pressures.austerity",
+        "op": "gte",
+        "value": 12
+      },
+      "scene": "几轮沟通下来，你发现此前回避的事情并没有停在原地。原本愿意等一等的合作方已经接近签约，渠道资源也开始向别家倾斜。对方没有故意针对你，只是没有理由一直等。你手里的钱还在，但可以选择的机会少了一些。",
+      "choices": [
+        {
+          "id": "try_small_pilot",
+          "text": "把合作规模缩小，先做一次可退出的试点",
+          "resolve": [
+            {
+              "id": "small_reversible_step",
+              "narrative": "你把投入控制在能够承受的范围内，并约定了清楚的阶段目标和退出条件。试点未必能成，但这一次，你没有把所有风险都交给未来。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "personal_liquidity",
+                  "delta": -5
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "negotiation",
+                  "delta": 1
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "austerity",
+                  "delta": -8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "small_opportunity_taken",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "以有限投入重新打开机会"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "keep_everything_in_reserve",
+          "text": "继续保留资金，接受这次合作机会已经错过",
+          "resolve": [
+            {
+              "id": "opportunity_passed",
+              "narrative": "你保留了资金，也没有承担新项目的风险。但对方最终选择了另一位合作伙伴，原先可以讨论的条件不再适用。你没有因此失去全部主动权，只是少了一条可以尝试的路。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "market_cycle",
+                  "delta": -5
+                },
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": -2
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "保留资金并接受机会流失"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ending_controlled",
+      "kind": "ending",
+      "chapter": 1,
+      "priority": 70,
+      "when": {
+        "all": [
+          {
+            "path": "forces.control.value",
+            "op": "gte",
+            "value": 28
+          },
+          {
+            "path": "forces.company_health.value",
+            "op": "gte",
+            "value": 40
+          },
+          {
+            "path": "flags.board_opened",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "title": "你开始真正掌舵",
+      "scene": "第一阶段结束时，你已经进入公司的实际决策圈。问题没有全部解决，家族内部也仍有分歧，但你不再只是遗嘱上的继承人。你开始知道每一项决定意味着什么，也必须亲自承担它的后果。",
+      "reflection": "拥有资源只是起点。真正接过一件事，意味着愿意看清它，也愿意为自己的判断负责。"
+    },
+    {
+      "id": "ending_friendship",
+      "kind": "ending",
+      "chapter": 1,
+      "priority": 60,
+      "when": {
+        "all": [
+          {
+            "path": "flags.ajie_supported",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "npcs.ajie.trust",
+            "op": "gte",
+            "value": 75
+          }
+        ]
+      },
+      "title": "财富之外的伙伴",
+      "scene": "你没有急着把钱投进朋友的项目，而是用自己能承担的方式帮他找到新的机会。家族企业仍有不少问题，但你重新找回了一段不以财富为起点的关系。",
+      "reflection": "不是所有支持都要用金钱衡量。有时守住信任，比抢先成为赢家更重要。"
+    },
+    {
+      "id": "ending_independent",
+      "kind": "ending",
+      "chapter": 1,
+      "priority": 50,
+      "when": {
+        "all": [
+          {
+            "path": "flags.personal_life_first",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "path": "forces.control.value",
+            "op": "lt",
+            "value": 28
+          }
+        ]
+      },
+      "title": "你选择另一种人生",
+      "scene": "你没有立刻把家族企业当成自己人生的全部。你开始认识新朋友、尝试新的生活，也逐渐想清楚自己愿意承担哪些责任。企业仍会继续影响你，但它不再是你唯一的方向。",
+      "reflection": "得到更多选择，并不意味着必须把每一种可能都抓在手里。"
+    },
+    {
+      "id": "ending_held_back",
+      "kind": "ending",
+      "chapter": 1,
+      "priority": 40,
+      "when": {
+        "all": [
+          {
+            "path": "forces.control.value",
+            "op": "lt",
+            "value": 20
+          },
+          {
+            "path": "forces.family_tension.value",
+            "op": "gte",
+            "value": 65
+          }
+        ]
+      },
+      "title": "被关系牵住的继承人",
+      "scene": "你名下的资产不少，真正能决定的事情却不多。家族成员都说是在替你考虑，重要会议却总在你不知情时结束。你终于意识到，关系可以提供保护，也可能让人失去行动的空间。",
+      "reflection": "善意需要边界，信任也需要事实支撑。"
+    },
+    {
+      "id": "ending_open",
+      "kind": "ending",
+      "chapter": 1,
+      "priority": 0,
+      "title": "故事才刚刚开始",
+      "scene": "你经历了第一次家族会议、一次经营问题和一次朋友的请求。事情还没有尘埃落定，但你已经不再是那个只会看着账户数字发愣的普通职员。接下来要走哪条路，仍然掌握在你手里。",
+      "reflection": "人生很少在一个决定后立刻揭晓答案。真正的方向，往往是在一次次选择之后慢慢显现。"
+    }
+  ],
+  "pressureRules": [
+    {
+      "name": "complacency",
+      "threshold": 20,
+      "eventId": "reversal_complacency",
+      "reason": "连续推迟处理现实问题，积累的风险开始显现。"
+    },
+    {
+      "name": "debt_of_favor",
+      "threshold": 20,
+      "eventId": "reversal_favor_debt",
+      "reason": "多次依赖他人支持，人情关系开始提出新的要求。"
+    },
+    {
+      "name": "austerity",
+      "threshold": 12,
+      "eventId": "reversal_austerity",
+      "reason": "连续回避投入与合作，原本开放的机会开始转向其他人。"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "人生一程 · 互动故事",
+  "short_name": "人生一程",
+  "description": "一段由自己选择推动的虚拟人生。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f2eee7",
+  "theme_color": "#f2eee7",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
