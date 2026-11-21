@@ -1,8 +1,6 @@
 name: Prototype CI
 
 on:
-  push:
-    branches: ["main", "work/**"]
   pull_request:
     branches: ["main"]
 
