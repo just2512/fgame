@@ -149,10 +149,10 @@ describe("deterministic narrative engine", () => {
     ])).toBe("ending_independent");
 
     expect(runPath([
-      {eventId:"inheritance_meeting",choiceId:"enjoy_new_life"},
-      {eventId:"board_pressure",choiceId:"delegate_for_now"},
-      {eventId:"cashflow_report",choiceId:"open_board_meeting"},
-      {eventId:"reversal_complacency",choiceId:"face_accumulated_issues"},
+      {eventId:"inheritance_meeting",choiceId:"trust_uncle"},
+      {eventId:"uncle_reassessment",choiceId:"set_clear_boundaries"},
+      {eventId:"cashflow_report",choiceId:"delegate_uncle"},
+      {eventId:"reversal_favor_debt",choiceId:"draw_a_clear_boundary"},
       {eventId:"ajie_call",choiceId:"decline_for_now"}
     ])).toBe("ending_held_back");
 
