@@ -49,13 +49,13 @@ describe("deterministic narrative engine", () => {
     const novice = startGame(story, "takeover-test");
     const noviceResult = chooseOption(novice, story, "take_over");
     expect(noviceResult.flags.rash_takeover).toBe(true);
-    expect(noviceResult.forces.company_health.value).toBe(37);
+    expect(noviceResult.forces.company_health?.value).toBe(37);
 
     const experienced = startGame(story, "takeover-test");
     experienced.player.skills.management = 4;
     const experiencedResult = chooseOption(experienced, story, "take_over");
     expect(experiencedResult.flags.rash_takeover).toBe(false);
-    expect(experiencedResult.forces.company_health.value).toBe(49);
+    expect(experiencedResult.forces.company_health?.value).toBe(49);
   });
 
   it("fires a scheduled consequence before the next main scene", () => {

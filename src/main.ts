@@ -6,9 +6,9 @@ import type { GameState, StoryDefinition, StoryEvent } from "./engine/types";
 import "./styles.css";
 
 const story = storyJson as StoryDefinition;
-const root = document.querySelector<HTMLDivElement>("#app");
-
-if (!root) throw new Error("App root element was not found");
+const rootElement = document.querySelector<HTMLDivElement>("#app");
+if (!rootElement) throw new Error("App root element was not found");
+const root: HTMLDivElement = rootElement;
 assertValidStory(story);
 
 let gameState: GameState | null = null;
