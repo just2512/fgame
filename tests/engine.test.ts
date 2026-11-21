@@ -111,6 +111,8 @@ describe("deterministic narrative engine", () => {
     state = chooseOption(state, noRandomStory, "face_accumulated_issues");
     expect(state.currentEventId).toBe("ajie_call");
     state = chooseOption(state, noRandomStory, "decline_for_now");
+    expect(state.currentEventId).toBe("reversal_austerity");
+    state = chooseOption(state, noRandomStory, "try_small_pilot");
     const ending = getCurrentEvent(state, noRandomStory);
     expect(ending.kind).toBe("ending");
     expect(ending.id).toBe("ending_independent");
@@ -145,7 +147,8 @@ describe("deterministic narrative engine", () => {
       {eventId:"board_pressure",choiceId:"attend_board"},
       {eventId:"cashflow_report",choiceId:"wait_one_week"},
       {eventId:"reversal_complacency",choiceId:"face_accumulated_issues"},
-      {eventId:"ajie_call",choiceId:"decline_for_now"}
+      {eventId:"ajie_call",choiceId:"decline_for_now"},
+      {eventId:"reversal_austerity",choiceId:"try_small_pilot"}
     ])).toBe("ending_independent");
 
     expect(runPath([
@@ -160,7 +163,8 @@ describe("deterministic narrative engine", () => {
       {eventId:"inheritance_meeting",choiceId:"hire_auditors"},
       {eventId:"audit_findings",choiceId:"preserve_evidence"},
       {eventId:"cashflow_report",choiceId:"wait_one_week"},
-      {eventId:"ajie_call",choiceId:"decline_for_now"}
+      {eventId:"ajie_call",choiceId:"decline_for_now"},
+      {eventId:"reversal_austerity",choiceId:"try_small_pilot"}
     ])).toBe("ending_open");
   });
 

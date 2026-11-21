@@ -1029,6 +1029,11 @@
                 {
                   "type": "trajectory.add",
                   "tag": "暂缓处理危机"
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "austerity",
+                  "delta": 6
                 }
               ]
             }
@@ -1257,7 +1262,7 @@
             {
               "id": "postpone_friend",
               "outcome": "friendship_unresolved",
-              "narrative": "你没有马上答应，也没有明确拒绝。阿杰说理解，但之后几天你们都没有再联系。事情暂时搁下了，关系也停在一个没有说清的位置。",
+              "narrative": "你没有马上答应，也没有明确拒绝。阿杰说理解，但之后几天你们都没有再联系。等你想起这件事时，他已经开始和另一位投资人讨论下一步。",
               "effects": [
                 {
                   "type": "npc.delta",
@@ -1455,6 +1460,82 @@
       ]
     },
     {
+      "id": "reversal_austerity",
+      "kind": "delayed",
+      "chapter": 1,
+      "title": "合作窗口正在关闭",
+      "when": {
+        "path": "pressures.austerity",
+        "op": "gte",
+        "value": 12
+      },
+      "scene": "几轮沟通下来，你发现此前回避的事情并没有停在原地。原本愿意等一等的合作方已经接近签约，渠道资源也开始向别家倾斜。对方没有故意针对你，只是没有理由一直等。你手里的钱还在，但可以选择的机会少了一些。",
+      "choices": [
+        {
+          "id": "try_small_pilot",
+          "text": "把合作规模缩小，先做一次可退出的试点",
+          "resolve": [
+            {
+              "id": "small_reversible_step",
+              "narrative": "你把投入控制在能够承受的范围内，并约定了清楚的阶段目标和退出条件。试点未必能成，但这一次，你没有把所有风险都交给未来。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "personal_liquidity",
+                  "delta": -5
+                },
+                {
+                  "type": "skill.delta",
+                  "skill": "negotiation",
+                  "delta": 1
+                },
+                {
+                  "type": "pressure.delta",
+                  "name": "austerity",
+                  "delta": -8
+                },
+                {
+                  "type": "flag.set",
+                  "name": "small_opportunity_taken",
+                  "value": true
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "以有限投入重新打开机会"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "keep_everything_in_reserve",
+          "text": "继续保留资金，接受这次合作机会已经错过",
+          "resolve": [
+            {
+              "id": "opportunity_passed",
+              "narrative": "你保留了资金，也没有承担新项目的风险。但对方最终选择了另一位合作伙伴，原先可以讨论的条件不再适用。你没有因此失去全部主动权，只是少了一条可以尝试的路。",
+              "effects": [
+                {
+                  "type": "force.delta",
+                  "force": "market_cycle",
+                  "delta": -5
+                },
+                {
+                  "type": "force.delta",
+                  "force": "control",
+                  "delta": -2
+                },
+                {
+                  "type": "trajectory.add",
+                  "tag": "保留资金并接受机会流失"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ending_controlled",
       "kind": "ending",
       "chapter": 1,
@@ -1573,6 +1654,12 @@
       "threshold": 20,
       "eventId": "reversal_favor_debt",
       "reason": "多次依赖他人支持，人情关系开始提出新的要求。"
+    },
+    {
+      "name": "austerity",
+      "threshold": 12,
+      "eventId": "reversal_austerity",
+      "reason": "连续回避投入与合作，原本开放的机会开始转向其他人。"
     }
   ]
 }
