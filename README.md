@@ -33,6 +33,7 @@ npm run dev
 npm run typecheck
 npm run test
 npm run build
+npm run pack
 npm run preview
 ```
 
@@ -57,3 +58,8 @@ npm run preview
 ## 当前验收状态
 
 以仓库 CI 的类型检查、引擎单元测试和生产构建结果为准。真实 iPhone / Android 安装、桌面图标、离线启动和不同浏览器行为仍需在实体设备上验收。
+
+
+## 打包交付物
+
+执行 `npm run build` 后运行 `npm run pack`，会在 `artifacts/` 生成带 commit 短 SHA 的源码 ZIP、网页预览 ZIP、BUILD_INFO.json、内容清单和打包报告。CI 使用同一脚本生成交付物。

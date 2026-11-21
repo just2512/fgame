@@ -182,7 +182,7 @@ async function handleClick(event: MouseEvent): Promise<void> {
   if (!action) return;
 
   if (action === "new") {
-    if (gameState && !gameState.ended && !globalThis.confirm("重新开始会覆盖当前设备上的故事进度。继续吗？")) return;
+    if (gameState && !gameState.ended && !globalThis.confirm("重新开始会保留旧存档，并新建一份存档。继续吗？")) return;
     await beginNewStory();
   } else if (action === "continue") {
     await continueStory();
